@@ -1,7 +1,10 @@
 
 # -*- coding: utf-8 -*-
 
+import uuid
+
 from django.db import models
+from django_mysql.models import ListCharField
 from django_mysql.models import ListCharField
 
 
@@ -10,8 +13,8 @@ from django_mysql.models import ListCharField
 # pathway.tsv
 class PathwayType(models.Model):
     """done"""
-    pathway_type_id = models.CharField(primary_key=True, max_length=32)
-    pathway_type_name = models.CharField(blank=False, unique=True, max_length=128)
+    uid = models.CharField(primary_key=True, max_length=32, editable=False)
+    name = models.CharField(null=False, unique=True, max_length=128)
 
     # class Meta:
     #     # todo set meta data...
@@ -19,62 +22,81 @@ class PathwayType(models.Model):
     #     db_table = 'pathway'
 
     def __str__(self):
-        return self.pathway_type_name
+        return self.name
 
 
 # pathway_sub.tsv
 class PathwaySub(models.Model):
     """done"""
-    pathway_sub_id = models.CharField(primary_key=True, max_length=32)
-    pathway_sub_name = models.CharField(blank=False, unique=True, max_length=128)
-    pathway_type_name = models.ForeignKey(
+    uid = models.CharField(primary_key=True, max_length=32, editable=False)
+    name = models.CharField(null=False, unique=True, max_length=128)
+    pathway_type = models.ForeignKey(
         PathwayType,
-        to_field='pathway_type_id',
-        blank=True,
-        on_delete=models.CASCADE
+        to_field='uid',
+        on_delete=models.PROTECT
     )
 
     def __str__(self):
-        return self.pathway_sub_name
+        return self.name
 
 
 # disease.tsv
 class Disease(models.Model):
     """done"""
-    disease_id = models.CharField(primary_key=True, max_length=32)
-    disease_name = models.CharField(blank=False, unique=True, max_length=128)
+    # id = models.AutoField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uid = models.CharField(null=False, unique=True, max_length=32)
+    name = models.CharField(null=False, unique=True, max_length=128)
 
     def __str__(self):
-        return self.disease_name
+        return self.name
 
 
 # gene.tsv
 class Gene(models.Model):
-    gene_id = models.CharField(primary_key=True, max_length=32)
-    gene_name = models.CharField(blank=False, null=False, max_length=64)
+    """done"""
+    """Duplicate entry error at name"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uid = models.CharField(null=False, max_length=32)
+    name = models.CharField(null=False, max_length=64)
 
     def __str__(self):
-        return self.gene_name
+        return self.name
 
 
 # kegg.tsv
 class Kegg(models.Model):
-    kegg_id = models.CharField(primary_key=True, max_length=32)
-    kegg_name = models.CharField(blank=False, null=False, max_length=128)
+    uid = models.CharField(primary_key=True, max_length=32, editable=False)
+    name = models.CharField(null=False, unique=True, max_length=128)
+    pathway_type = models.ForeignKey(
+        PathwayType,
+        to_field='uid',
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT
+    )
+    pathway_sub = models.ForeignKey(
+        PathwaySub,
+        to_field='uid',
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT
+    )
 
     def __str__(self):
-        return self.kegg_name
+        return self.name
 
 
-# kegg_master.tsv
-class KeggMaster(models.Model):
-    # todo modify related_pathway, gene
-    kegg_id = pathway_type_name = models.ForeignKey(
-        Kegg,
-        to_field='kegg_id',
-        blank=True,
-        on_delete=models.CASCADE
-    )
-    related_pathway = ListCharField(base_field=models.CharField())
-    disease_list = ListCharField(base_field=models.CharField())
-    gene_list = ListCharField(base_field=models.CharField())
+# # kegg_master.tsv
+# class KeggMaster(models.Model):
+#     # todo modify related_pathway, gene
+#     kegg_id = models.ForeignKey(
+#         Kegg,
+#         on_delete=models.PROTECT
+#     )
+#     related_pathway = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
+#     disease_list = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
+#     gene_list = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
+#
+#     def __str__(self):
+#         return self.kegg_id

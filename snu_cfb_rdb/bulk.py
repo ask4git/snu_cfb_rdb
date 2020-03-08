@@ -12,30 +12,37 @@ def bulk():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'snu_cfb_rdb.settings')
     django.setup()
     try:
-        from cfb_rdb.models import Kegg, Pathway, PathwaySub
+        from cfb_rdb.models import Kegg, PathwayType, PathwaySub
 
         bulk_data = []
-        path_csv_file = '/Users/ask4git/Desktop/snu_csv_files/kegg_pathway/pathway_sub.tsv'
+        path_csv_file = '/Users/ask4git/Desktop/snu_csv_files/kegg_pathway/kegg.tsv'
 
         with open(path_csv_file, encoding='utf-8') as in_csv_file:
             rdr = csv.reader(in_csv_file, delimiter='\t')   # tsv
 
             for row in rdr:
-                _id, _name, _sid = row
-                # _id, _name, _ps, _p = row[0], row[1], None, None
-                # if len(row) == 4:
-                #     _ps = PathwaySub(pathway_sub_id=int(row[2]))
-                #     print(_ps)
-                #     _p = Pathway(pathway_id=int(row[3]))
 
-                # print(_id, _name, _ps, _p)
-                bulk_data.append(
-                    PathwaySub(pathway_sub_id=_id,
-                            pathway_sub_name=_name,
-                            pathway_name=Pathway(pathway_id=_sid)
-                            ))
+                if len(row) == 2:
+                    _uid, _name = row
+                    bulk_data.append(Kegg(
+                        uid=str(_uid),
+                        name=str(_name),
+                        pathway_type=None,
+                        pathway_sub=None
+                    ))
+                else:
 
-        PathwaySub.objects.bulk_create(bulk_data)
+                    _uid, _name, _sid, _tid = row
+                    print(type(_tid), type(_sid))
+                    bulk_data.append(Kegg(
+                        uid=str(_uid),
+                        name=str(_name),
+
+                        pathway_sub=PathwaySub(uid=_sid),
+                        pathway_type=PathwayType(uid=_tid)
+                    ))
+
+        Kegg.objects.bulk_create(bulk_data)
 
     except ImportError as exc:
         raise ImportError(

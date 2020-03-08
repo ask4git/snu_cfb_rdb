@@ -1,0 +1,10 @@
+.gitignore
+.DS_Store
+.idea/
+graph_model.dot
+venv
+snu_cfb_rdb/snu_cfb_rdb/authentication.py
+snu_cfb_rdb/snu_cfb_rdb/settings.py
+snu_cfb_rdb/cfb_rdb/migrations/
+snu_cfb_rdb/cfb_rdb/__pycache__/
+snu_cfb_rdb/snu_cfb_rdb/__pycache__/
