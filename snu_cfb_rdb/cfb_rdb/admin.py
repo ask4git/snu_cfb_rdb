@@ -39,10 +39,10 @@ class KeggAdmin(admin.ModelAdmin):
     search_fields = ['id', 'uid', 'name', 'pathway_sub', 'pathway_type']
 
 
-# class KeggMasterAdmin(admin.ModelAdmin):
-#     list_display = ['kegg_id', 'related_pathway', 'disease_list', 'gene_list']
-#     list_display_links = ['kegg_id', 'related_pathway', 'disease_list', 'gene_list']
-#     search_fields = ['kegg_id', 'related_pathway', 'disease_list', 'gene_list']
+class KeggMasterAdmin(admin.ModelAdmin):
+    list_display = ['id', 'kegg_name', 'related_pathway', 'disease_list', 'gene_list']
+    list_display_links = ['id', 'kegg_name', 'related_pathway', 'disease_list', 'gene_list']
+    search_fields = ['id', 'kegg_name', 'related_pathway', 'disease_list', 'gene_list']
 
 
 admin.site.register(PathwayType, PathwayTypeAdmin)
@@ -50,4 +50,4 @@ admin.site.register(PathwaySub, PathwaySubAdmin)
 admin.site.register(Disease, DiseaseAdmin)
 admin.site.register(Gene, GeneAdmin)
 admin.site.register(Kegg, KeggAdmin)
-# admin.site.register(KeggMaster, KeggMasterAdmin)
+admin.site.register(KeggMaster, KeggMasterAdmin)

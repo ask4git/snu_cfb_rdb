@@ -5,7 +5,6 @@ import uuid
 
 from django.db import models
 from django_mysql.models import ListCharField
-from django_mysql.models import ListCharField
 
 
 # Create your models here.
@@ -93,17 +92,32 @@ class Kegg(models.Model):
 # kegg_master.tsv
 class KeggMaster(models.Model):
     # todo modify related_pathway, gene
+    """
+    django.db.utils.DataError: (1406, "Data too long for column 'gene_list' at row 1")
+    """
+    # https://cmleo.tistory.com/22
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    kegg_id = models.ForeignKey(
+    kegg_name = models.ForeignKey(
         Kegg,
-        to_field='uid',
-        blank=True,
-        null=True,
+        to_field='id',
+        null=False,
         on_delete=models.PROTECT
     )
-    related_pathway = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
-    disease_list = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
-    gene_list = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
-
-    def __str__(self):
-        return self.kegg_id
+    related_pathway = ListCharField(
+        base_field=models.CharField(max_length=64),
+        blank=True,
+        null=True,
+        max_length=128
+    )
+    disease_list = ListCharField(
+        base_field=models.CharField(max_length=64),
+        blank=True,
+        null=True,
+        max_length=128
+    )
+    gene_list = ListCharField(
+        base_field=models.CharField(max_length=64),
+        blank=True,
+        null=True,
+        max_length=128
+    )
