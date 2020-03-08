@@ -12,8 +12,9 @@ def bulk():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'snu_cfb_rdb.settings')
     django.setup()
     try:
-        from cfb_rdb.models import Kegg, PathwayType, PathwaySub
+        from cfb_rdb.models import PathwaySub, PathwayType, Kegg
 
+        # kegg ========================
         bulk_data = []
         path_csv_file = '/Users/ask4git/Desktop/snu_csv_files/kegg_pathway/kegg.tsv'
 
@@ -27,22 +28,21 @@ def bulk():
                     bulk_data.append(Kegg(
                         uid=str(_uid),
                         name=str(_name),
-                        pathway_type=None,
-                        pathway_sub=None
+                        pathway_sub=None,
+                        pathway_type = None
                     ))
                 else:
-
                     _uid, _name, _sid, _tid = row
                     print(type(_tid), type(_sid))
                     bulk_data.append(Kegg(
-                        uid=str(_uid),
+                        uid=str("hsa" + _uid),
                         name=str(_name),
-
                         pathway_sub=PathwaySub(uid=_sid),
                         pathway_type=PathwayType(uid=_tid)
                     ))
 
         Kegg.objects.bulk_create(bulk_data)
+        # =============================
 
     except ImportError as exc:
         raise ImportError(

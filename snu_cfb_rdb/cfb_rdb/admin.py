@@ -34,9 +34,9 @@ class GeneAdmin(admin.ModelAdmin):
 
 
 class KeggAdmin(admin.ModelAdmin):
-    list_display = ['pathway_type', 'pathway_sub', 'uid', 'name']
-    list_display_links = ['pathway_type', 'pathway_sub', 'uid', 'name']
-    search_fields = ['pathway_type', 'pathway_sub', 'uid', 'name']
+    list_display = ['id', 'uid', 'name', 'pathway_sub', 'pathway_type']
+    list_display_links = ['id', 'uid', 'name', 'pathway_sub', 'pathway_type']
+    search_fields = ['id', 'uid', 'name', 'pathway_sub', 'pathway_type']
 
 
 # class KeggMasterAdmin(admin.ModelAdmin):

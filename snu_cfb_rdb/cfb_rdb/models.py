@@ -66,7 +66,10 @@ class Gene(models.Model):
 
 # kegg.tsv
 class Kegg(models.Model):
-    uid = models.CharField(primary_key=True, max_length=32, editable=False)
+    """done"""
+    """Searching error"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uid = models.CharField(max_length=32, editable=False)
     name = models.CharField(null=False, unique=True, max_length=128)
     pathway_type = models.ForeignKey(
         PathwayType,
@@ -87,16 +90,20 @@ class Kegg(models.Model):
         return self.name
 
 
-# # kegg_master.tsv
-# class KeggMaster(models.Model):
-#     # todo modify related_pathway, gene
-#     kegg_id = models.ForeignKey(
-#         Kegg,
-#         on_delete=models.PROTECT
-#     )
-#     related_pathway = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
-#     disease_list = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
-#     gene_list = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
-#
-#     def __str__(self):
-#         return self.kegg_id
+# kegg_master.tsv
+class KeggMaster(models.Model):
+    # todo modify related_pathway, gene
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    kegg_id = models.ForeignKey(
+        Kegg,
+        to_field='uid',
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT
+    )
+    related_pathway = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
+    disease_list = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
+    gene_list = ListCharField(base_field=models.CharField(max_length=32), max_length=128)
+
+    def __str__(self):
+        return self.kegg_id
