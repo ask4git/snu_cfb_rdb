@@ -26,28 +26,28 @@ def bulk():
         path_csv_file = '/Users/ask4git/Desktop/snu_csv_files/kegg_pathway/kegg_master.tsv'
 
         # kegg master ========================
-
-        with open(path_csv_file, encoding='utf-8') as in_csv_file:
-            rdr = csv.reader(in_csv_file, delimiter='\t')  # tsv
-
-            for row in rdr:
-                _kid, _dis, _rel, _gen = row
-
-                # kegg_name
-                _id = Kegg.objects.filter(uid=_kid)[0].id
-                print(_id)
-                print(_kid, _rel, _dis, _gen )
-
-                res = KeggMaster(
-                    kegg_name=Kegg(id=_id),
-                    related_pathway=foo(_rel.strip().split(';')),
-                    disease_list=foo(_dis.strip().split(';')),
-                    gene_list=foo(_gen.strip().split(';'))
-                )
-
-                bulk_data.append(res)
-
-            KeggMaster.objects.bulk_create(bulk_data)
+        #
+        # with open(path_csv_file, encoding='utf-8') as in_csv_file:
+        #     rdr = csv.reader(in_csv_file, delimiter='\t')  # tsv
+        #
+        #     for row in rdr:
+        #         _kid, _dis, _rel, _gen = row
+        #
+        #         # kegg_name
+        #         _id = Kegg.objects.filter(uid=_kid)[0].id
+        #         print(_id)
+        #         print(_kid, _rel, _dis, _gen )
+        #
+        #         res = KeggMaster(
+        #             kegg_name=Kegg(id=_id),
+        #             related_pathway=foo(_rel.strip().split(';')),
+        #             disease_list=foo(_dis.strip().split(';')),
+        #             gene_list=foo(_gen.strip().split(';'))
+        #         )
+        #
+        #         bulk_data.append(res)
+        #
+        #     KeggMaster.objects.bulk_create(bulk_data)
 
         # ====================================
 
@@ -63,7 +63,7 @@ def bulk():
         #         if len(row) == 2:
         #             _uid, _name = row
         #             bulk_data.append(Kegg(
-        #                 uid=str(_uid),
+        #                 uid=str("hsa" + _uid),
         #                 name=str(_name),
         #                 pathway_sub=None,
         #                 pathway_type = None
